@@ -88,6 +88,10 @@
   '(("Examples"  "^\\( *\\(it\\|describe\\|context\\) +.+\\)"          1))
   "The imenu regex to parse an outline of the rspec file")
 
+(defcustom rspec-rake-command "rake"
+  "The command for rake"
+  :type 'string :group 'rspec)
+
 (defun rspec-set-imenu-generic-expression ()
   (make-local-variable 'imenu-generic-expression)
   (make-local-variable 'imenu-create-index-function)
@@ -264,13 +268,13 @@
 (defun rspec-run (&rest opts)
   "Runs spec with the specified options"
   (rspec-register-verify-redo (cons 'rspec-run opts))
-  (compile (concat "rake spec SPEC_OPTS=\'" (mapconcat (lambda (x) x) opts " ") "\'"))
+  (compile (concat rspec-rake-command " spec SPEC_OPTS=\'" (mapconcat (lambda (x) x) opts " ") "\'"))
   (end-of-buffer-other-window 0))
 
 (defun rspec-run-single-file (spec-file &rest opts)
   "Runs spec with the specified options"
   (rspec-register-verify-redo (cons 'rspec-run-single-file (cons spec-file opts)))
-  (compile (concat "rake spec SPEC=\'" spec-file "\' SPEC_OPTS=\'" (mapconcat (lambda (x) x) opts " ") "\'"))
+  (compile (concat rspec-rake-command " spec SPEC=\'" spec-file "\' SPEC_OPTS=\'" (mapconcat (lambda (x) x) opts " ") "\'"))
   (end-of-buffer-other-window 0))
 
 (defun rspec-project-root (&optional directory)
