@@ -160,22 +160,28 @@
       (beginning-of-line)
       (delete-region (save-excursion (beginning-of-line) (point)) 
                      (save-excursion (forward-line 1) (point))))))
+
+(defun rspec-options ()
+  (let ((spec-opts-file (concat (rspec-project-root) "spec/spec.opts")))
+    (if (file-exists-p spec-opts-file)
+        (concat "--options " spec-opts-file)
+      "--format specdoc --reverse")))
   
 (defun rspec-verify ()
   "Runs the specified spec, or the spec file for the current buffer."
   (interactive)
-  (rspec-run-single-file (rspec-spec-file-for (buffer-file-name)) "--format specdoc" "--reverse"))
+  (rspec-run-single-file (rspec-spec-file-for (buffer-file-name)) (rspec-options)))
 
 (defun rspec-verify-single ()
   "Runs the specified example at the point of the current buffer."
   (interactive)
-  (rspec-run-single-file (rspec-spec-file-for (buffer-file-name)) "--format specdoc" "--reverse" (concat "--line " (number-to-string (line-number-at-pos)))))
+  (rspec-run-single-file (rspec-spec-file-for (buffer-file-name)) (rspec-options) (concat "--line " (number-to-string (line-number-at-pos)))))
  
 (defun rspec-verify-all ()
   "Runs the 'spec' rake task for the project of the current file."
   (interactive)
   (let ((default-directory (or (rspec-project-root) default-directory)))
-    (rspec-run "--format=progress")))
+    (rspec-run (rspec-options))))
 
 (defun rspec-toggle-spec-and-target ()
   "Switches to the spec for the current buffer if it is a
