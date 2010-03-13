@@ -284,6 +284,7 @@
 (defun rspec-run (&rest opts)
   "Runs spec with the specified options"
   (rspec-register-verify-redo (cons 'rspec-run opts))
+  (cd (rspec-project-root))
   (ansi-color-for-comint-mode-on)
   (compile (concat rspec-spec-command " " (rspec-spec-directory (rspec-project-root)) " " (mapconcat (lambda (x) x) opts " ")) t)
   (end-of-buffer-other-window 0))
@@ -291,6 +292,7 @@
 (defun rspec-run-single-file (spec-file &rest opts)
   "Runs spec with the specified options"
   (rspec-register-verify-redo (cons 'rspec-run-single-file (cons spec-file opts)))
+  (cd (rspec-project-root))
   (ansi-color-for-comint-mode-on)
   (compile (concat rspec-spec-command " " spec-file " " (mapconcat (lambda (x) x) opts " ")) t)
   (end-of-buffer-other-window 0))
